@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --version)",
+      "Bash(npx create-expo-app@latest . --template blank-typescript)",
+      "Bash(npx create-expo-app@latest . --template blank-typescript --yes)",
+      "Read(//c/Users/User/Documents/programming projects/**)",
+      "Bash(npx create-expo-app@latest datingapp-temp --template blank-typescript)",
+      "Bash(shopt -s dotglob)",
+      "Bash(mv \"/c/Users/User/Documents/programming projects/datingapp-temp/\"* \"/c/Users/User/Documents/programming projects/datingapp/\")",
+      "Bash(rmdir \"/c/Users/User/Documents/programming projects/datingapp-temp\")",
+      "Bash(npx expo:*)"
+    ]
+  }
+}
