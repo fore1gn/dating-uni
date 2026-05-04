@@ -11,6 +11,7 @@ import { Profile } from './src/types';
 
 import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
+import UniversitySetupScreen from './src/screens/UniversitySetupScreen';
 import ProfileSetupScreen from './src/screens/ProfileSetupScreen';
 import DiscoverScreen from './src/screens/DiscoverScreen';
 import MatchesScreen from './src/screens/MatchesScreen';
@@ -115,6 +116,7 @@ function MainTabs({ userId }: { userId: string }) {
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [hasProfile, setHasProfile] = useState<boolean | null>(null);
+  const [hasUniversity, setHasUniversity] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -168,6 +170,11 @@ export default function App() {
       <StatusBar style="dark" />
       {!session ? (
         <AuthNavigator />
+      ) : !hasUniversity ? (
+        <UniversitySetupScreen
+          onComplete={(_university, _email) => setHasUniversity(true)}
+          onSkip={() => setHasUniversity(true)}
+        />
       ) : !hasProfile ? (
         <ProfileSetupScreen
           userId={session.user.id}

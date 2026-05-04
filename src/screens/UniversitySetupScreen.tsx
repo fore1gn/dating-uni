@@ -8,30 +8,28 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, spacing, borderRadius, typography } from '../lib/theme';
-import { supabase } from '../lib/supabase';
 
 type Props = {
-  navigation: NativeStackNavigationProp<any>;
+  onComplete: (university: string, email: string) => void;
+  onSkip: () => void;
 };
 
-export default function LoginScreen({ navigation }: Props) {
+export default function UniversitySetupScreen({ onComplete, onSkip }: Props) {
+  const [university, setUniversity] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+  const handleContinue = () => {
+    if (!university.trim()) {
+      Alert.alert('Required', 'Please enter your university name');
       return;
     }
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
-    if (error) Alert.alert('Error', error.message);
+    if (!email.trim() || !email.includes('@') || !email.includes('.edu')) {
+      Alert.alert('Invalid Email', 'Please enter a valid university email (.edu)');
+      return;
+    }
+    onComplete(university.trim(), email.trim());
   };
 
   return (
@@ -42,50 +40,40 @@ export default function LoginScreen({ navigation }: Props) {
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.logo}>Spark</Text>
-          <Text style={styles.tagline}>Find your match</Text>
+          <Text style={styles.subtitle}>University Edition</Text>
+          <Text style={styles.description}>
+            Connect with students at your university and in your city.
+          </Text>
         </View>
 
         <View style={styles.form}>
+          <Text style={styles.label}>University Name</Text>
           <TextInput
             style={styles.input}
-            placeholder="Email"
+            placeholder="e.g. Universidad Complutense de Madrid"
+            placeholderTextColor={colors.textLight}
+            value={university}
+            onChangeText={setUniversity}
+            autoCapitalize="words"
+          />
+
+          <Text style={styles.label}>University Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="you@university.edu"
             placeholderTextColor={colors.textLight}
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
             keyboardType="email-address"
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor={colors.textLight}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleLogin}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              <Text style={styles.buttonText}>Log In</Text>
-            )}
+
+          <TouchableOpacity style={styles.button} onPress={handleContinue}>
+            <Text style={styles.buttonText}>Continue</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-          <Text style={styles.link}>
-            Don't have an account? <Text style={styles.linkBold}>Sign Up</Text>
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.skipButton}
-          onPress={() => navigation.navigate('Demo' as any)}
-        >
+        <TouchableOpacity style={styles.skipButton} onPress={onSkip}>
           <Text style={styles.skipText}>Skip (Developer Demo)</Text>
         </TouchableOpacity>
       </View>
@@ -112,13 +100,27 @@ const styles = StyleSheet.create({
     fontSize: 48,
     color: colors.primary,
   },
-  tagline: {
+  subtitle: {
+    ...typography.h3,
+    color: colors.primaryDark,
+    marginTop: spacing.xs,
+  },
+  description: {
     ...typography.body,
     color: colors.textSecondary,
-    marginTop: spacing.xs,
+    textAlign: 'center',
+    marginTop: spacing.md,
+    paddingHorizontal: spacing.md,
   },
   form: {
     marginBottom: spacing.lg,
+  },
+  label: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    fontWeight: '600',
+    marginBottom: spacing.xs,
+    marginLeft: spacing.xs,
   },
   input: {
     backgroundColor: colors.surface,
@@ -127,7 +129,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     ...typography.body,
     color: colors.text,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.md,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -146,15 +148,6 @@ const styles = StyleSheet.create({
   buttonText: {
     ...typography.bodyBold,
     color: colors.white,
-  },
-  link: {
-    ...typography.caption,
-    color: colors.textSecondary,
-    textAlign: 'center',
-  },
-  linkBold: {
-    color: colors.primary,
-    fontWeight: '600',
   },
   skipButton: {
     marginTop: spacing.xxl,

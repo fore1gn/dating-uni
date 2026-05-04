@@ -5,6 +5,9 @@ export interface Profile {
   age: number;
   photos: string[];
   created_at: string;
+  university?: string;
+  city?: string;
+  degree?: string;
 }
 
 export interface Match {

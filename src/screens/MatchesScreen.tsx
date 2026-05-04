@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { DEFAULT_AVATAR } from '../lib/mock';
 import {
   View,
   Text,
@@ -103,9 +104,7 @@ export default function MatchesScreen({ userId, onOpenChat }: Props) {
               activeOpacity={0.7}
             >
               <Image
-                source={{
-                  uri: item.profile.photos[0] || 'https://via.placeholder.com/100',
-                }}
+                source={item.profile.photos[0] ? { uri: item.profile.photos[0] } : DEFAULT_AVATAR}
                 style={styles.avatar}
               />
               <View style={styles.matchInfo}>

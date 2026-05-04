@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { colors, spacing, borderRadius, typography } from '../lib/theme';
 import { supabase } from '../lib/supabase';
+import { DEFAULT_AVATAR } from '../lib/mock';
 import { Profile } from '../types';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -150,11 +151,7 @@ export default function DiscoverScreen({ userId }: Props) {
         {profiles[currentIndex + 1] && (
           <View style={[styles.card, styles.nextCard]}>
             <Image
-              source={{
-                uri:
-                  profiles[currentIndex + 1].photos[0] ||
-                  'https://via.placeholder.com/400x600',
-              }}
+              source={profiles[currentIndex + 1].photos[0] ? { uri: profiles[currentIndex + 1].photos[0] } : DEFAULT_AVATAR}
               style={styles.cardImage}
             />
           </View>
@@ -175,9 +172,7 @@ export default function DiscoverScreen({ userId }: Props) {
           ]}
         >
           <Image
-            source={{
-              uri: currentProfile.photos[0] || 'https://via.placeholder.com/400x600',
-            }}
+            source={currentProfile.photos[0] ? { uri: currentProfile.photos[0] } : DEFAULT_AVATAR}
             style={styles.cardImage}
           />
           <View style={styles.cardOverlay}>

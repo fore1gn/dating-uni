@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { colors, spacing, borderRadius, typography } from '../lib/theme';
 import { supabase } from '../lib/supabase';
+import { DEFAULT_AVATAR } from '../lib/mock';
 import { Profile } from '../types';
 
 type Props = {
@@ -51,9 +52,7 @@ export default function ProfileScreen({ userId }: Props) {
 
       <View style={styles.photoSection}>
         <Image
-          source={{
-            uri: profile.photos[0] || 'https://via.placeholder.com/200',
-          }}
+          source={profile.photos[0] ? { uri: profile.photos[0] } : DEFAULT_AVATAR}
           style={styles.mainPhoto}
         />
       </View>
